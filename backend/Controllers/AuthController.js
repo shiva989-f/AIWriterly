@@ -15,7 +15,7 @@ export const signup = async (req, res) => {
     if (userAlreadyExist) {
       return res
         .status(400)
-        .json({ msg: "User already exist, Please login!", success: false });
+        .json({ message: "User already exist, Please login!", success: false });
     }
     const hashedPassword = await bcryptjs.hash(password, 10);
 
@@ -34,13 +34,15 @@ export const signup = async (req, res) => {
     });
     await user.save();
 
+    // Sending OTP through nodemailer
     await sendVerificationEmail(user.email, verificationToken)
     
     
     // JWT
-    const token = generateTokenAndSetCookies(res, user._id);
-    res.status(200).json({
-      msg: "Signed up successfully!",
+    generateTokenAndSetCookies(res, user._id);
+
+    res.status(201).json({
+      message: "Signed up successfully!",
       user: {
         ...user._doc, // Spread the user document means user data
         password: undefined, // and change the password value to undefined so it is not shown in response
@@ -48,9 +50,43 @@ export const signup = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    res.status(400).json({ msg: error.message, success: false });
+    res.status(400).json({ message: error.message, success: false });
   }
 };
+
+// Verify email route: http://localhost:3000/api/auth/verify-email
+export const verifyEmail = async (req, res) => {
+  // Getting otp from user
+  const {code} = req.body
+  try {
+    // If token is not found or verification time is expired then it is not valid
+    const user = await User.findOne({
+      verificationToken: code,
+      // if verificationTokenExpires time is greater than Date.now(), then expiry time is not expire yet
+      verificationTokenExpiresAt: {$gt: Date.now()}
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Invalid or expired verification code"});
+    }
+
+    // If valid otp
+    user.isVerified = true
+    // after verification delete 
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+    await user.save()
+
+    res
+      .status(400)
+      .json({
+        success: false,
+        message: "Invalid or expired verification code",
+      });
+  } catch (error) {
+    
+  }
+}
 
 // Login route: http://localhost:3000/api/auth/login
 export const login = (req, res) => {

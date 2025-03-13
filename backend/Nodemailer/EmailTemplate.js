@@ -23,3 +23,63 @@ export const VERIFICATION_EMAIL_TEMPLATE = `<!DOCTYPE html>
 </html>
 
 `;
+
+
+const welcomeTemplate = `<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome Email</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f4f4f4; padding: 20px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); text-align: center;">
+                    <!-- Logo Section -->
+                    <tr>
+                        <td style="padding-bottom: 20px;">
+                            <img src="[Your Logo URL]" alt="Company Logo" width="120" style="display: block; margin: 0 auto;">
+                        </td>
+                    </tr>
+                    <!-- Welcome Message -->
+                    <tr>
+                        <td>
+                            <h1 style="color: #333; font-size: 24px; margin: 0;">Welcome to [Your Company Name]!</h1>
+                            <p style="color: #666; font-size: 16px; line-height: 1.5; margin: 10px 0 20px;">
+                                We're thrilled to have you on board. Get ready to explore amazing features and be a part of our community.
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- Call to Action Button -->
+                    <tr>
+                        <td>
+                            <a href="[Your Link Here]" style="display: inline-block; padding: 12px 24px; background: #007BFF; color: #ffffff; text-decoration: none; font-size: 16px; border-radius: 5px; font-weight: bold;">
+                                Get Started
+                            </a>
+                        </td>
+                    </tr>
+                    <!-- Additional Information -->
+                    <tr>
+                        <td style="padding-top: 20px;">
+                            <p style="color: #666; font-size: 14px; line-height: 1.5; margin: 0;">
+                                Need help? Feel free to reply to this email or visit our <a href="[Support Link]" style="color: #007BFF; text-decoration: none;">Support Center</a>.
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding-top: 30px; font-size: 12px; color: #888;">
+                            <p style="margin: 0;">© [Year] [Your Company Name]. All Rights Reserved.</p>
+                            <p style="margin: 5px 0;">123 Your Street, Your City, Your Country</p>
+                            <p style="margin: 5px 0;">
+                                <a href="[Unsubscribe Link]" style="color: #888; text-decoration: none;">Unsubscribe</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+`;
