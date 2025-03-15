@@ -19,6 +19,6 @@ authRoute.post("/verify-email", verifyEmail);
 // Send the email with reset password link
 authRoute.post("/forgot-password", forgotPassword);
 // Receive the new password and reset token and check if the reset token exist if exist update the password with new one.
-authRoute.post("/reset-password", resetPassword);
+authRoute.post("/reset-password/:token", resetPassword);
 
 export default authRoute
