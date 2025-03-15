@@ -12,6 +12,10 @@ DBConnection();
 app.use(express.json())
 app.use('/api/auth', authRoute)
 
+app.get('/',(req, res)=> {
+   res.cookie('name', 'shiva').send("Hello");
+})
+
 app.listen(PORT, () => {
     console.log(`App listening on http://localhost:${PORT} `);
 });
