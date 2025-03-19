@@ -6,12 +6,17 @@ import {
   verifyEmail,
   forgotPassword,
   resetPassword,
+  checkAuth,
 } from "../Controllers/AuthController.js";
+import { verifyToken } from "../Middleware/VerifyToken.js";
+import { loginValidation, registerValidation } from "../Middleware/AuthValidation.js";
 
 const authRoute = express.Router();
 
-authRoute.post("/signup", signup);
-authRoute.post("/login", login);
+authRoute.get("/check-auth", verifyToken, checkAuth);
+
+authRoute.post("/signup", registerValidation, signup);
+authRoute.post("/login", loginValidation, login);
 authRoute.post("/logout", logout);
 
 // Receive the otp sent during signup and check if otp is exist in db and its time is not expired.
@@ -21,4 +26,4 @@ authRoute.post("/forgot-password", forgotPassword);
 // Receive the new password and reset token and check if the reset token exist if exist update the password with new one.
 authRoute.post("/reset-password/:token", resetPassword);
 
-export default authRoute
+export default authRoute;

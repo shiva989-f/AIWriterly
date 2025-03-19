@@ -32,6 +32,7 @@ export const VERIFICATION_EMAIL_TEMPLATE = `<!DOCTYPE html>
                                 <p>If you didn’t request this, please ignore this email.</p>
                                 <p>Best regards,</p>
                                 <p>AI Writerly</p>
+                                <p style="text-align: center; font-size: 12px;">This is an automated message, please do not reply to this email</p>
                             </td>
                         </tr>
                     </table>
@@ -82,6 +83,7 @@ export const WELCOME_TEMPLATE = `<!DOCTYPE html>
                                 <p>Need help? Contact our support team anytime.</p>
                                 <p>Best regards,</p>
                                 <p>AI Writerly</p>
+                                <p style="text-align: center; font-size: 12px;">This is an automated message, please do not reply to this email</p>
                             </td>
                         </tr>
                     </table>
@@ -133,6 +135,7 @@ export const RESET_PASSWORD_TEMPLATE = `<!DOCTYPE html>
                                 <p>This link will expire in 1 hour for security reasons.</p>
                                 <p>Best regards,</p>
                                 <p>AI Writerly</p>
+                                <p style="text-align: center; font-size: 12px;">This is an automated message, please do not reply to this email</p>
                             </td>
                         </tr>
                     </table>
@@ -175,9 +178,11 @@ export const RESET_PASSWORD_SUCCESSFUL_EMAIL = `<!DOCTYPE html>
                     <p>Thank you for helping us keep your account secure.</p>
                     <p>Best regards,</p>
                     <p><strong>AI Writerly</strong></p>
+                    <p style="text-align: center; font-size: 12px;">This is an automated message, please do not reply to this email</p>
                 </td>
             </tr>
         </table>
+        
     </body>
 
 </html>

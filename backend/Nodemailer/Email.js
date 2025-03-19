@@ -1,4 +1,5 @@
 import {
+  RESET_PASSWORD_SUCCESSFUL_EMAIL,
   RESET_PASSWORD_TEMPLATE,
   VERIFICATION_EMAIL_TEMPLATE,
   WELCOME_TEMPLATE,
@@ -16,17 +17,20 @@ export const sendVerificationEmail = async (email, otp) => {
     category: "Email Verification",
   };
 
-  // transporter is mail configuration imported from nodemailer.config.js
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log("Error:", error);
-      return Promise.reject(
-        new Error(`Error sending verification email: ${error.message}`)
-      );
-    } else {
-      console.log("Email sent:", info.response);
-    }
-  });
+  try {
+    // transporter is mail configuration imported from nodemailer.config.js
+    await transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending verification mail:", error.message);
+        return; // Prevents further execution
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    
+  }
 };
 
 export const sendWelcomeEmail = async (email) => {
@@ -38,16 +42,18 @@ export const sendWelcomeEmail = async (email) => {
     category: "Welcome to AI Writerly",
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log("Error:", error);
-      return Promise.reject(
-        new Error(`Error while sending welcome email: ${error.message}`)
-      );
-    } else {
-      console.log("Email sent:", info.response);
-    }
-  });
+  try {
+    await transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error:", error);
+        return; // Prevents further execution
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const sendResetPasswordEmail = async (email, resetURL) => {
@@ -59,16 +65,18 @@ export const sendResetPasswordEmail = async (email, resetURL) => {
     category: "Reset Password",
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log("Error:", error);
-      return Promise.reject(
-        new Error(`Error while sending welcome email: ${error.message}`)
-      );
-    } else {
-      console.log("Email sent:", info.response);
-    }
-  });
+  try {
+    await transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error:", error);
+        return; // Prevents further execution
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const sendResetPasswordSuccessEmail = async (email) => {
@@ -76,18 +84,20 @@ export const sendResetPasswordSuccessEmail = async (email) => {
     from: '"AI Writerly" <foradsonly98@gmail.com>',
     to: email,
     subject: "Reset Password Success",
-    html: RESET_PASSWORD_TEMPLATE,
+    html: RESET_PASSWORD_SUCCESSFUL_EMAIL,
     category: "Reset Password Success",
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log("Error:", error);
-      return Promise.reject(
-        new Error(`Error while sending email: ${error.message}`)
-      );
-    } else {
-      console.log("Email sent:", info.response);
-    }
-  });
+  try {
+    await transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error:", error);
+        return; // Prevents further execution
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

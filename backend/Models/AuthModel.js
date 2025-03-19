@@ -9,7 +9,8 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "Password is required"],
+      minlength: [6, "Password must be at least 6 characters long"],
     },
     name: {
       type: String,
@@ -28,7 +29,7 @@ const UserSchema = new mongoose.Schema(
     verificationToken: String,
     verificationTokenExpiresAt: Date,
   },
-  { timestamps: true}
+  { timestamps: true }
 );
 
 export const User = mongoose.model("User", UserSchema);

@@ -17,19 +17,39 @@ export const signup = async (req, res) => {
     if (!email || !password || !name) {
       throw new Error("All fields are required!");
     }
-    const userAlreadyExist = await User.findOne({ email });
-    if (userAlreadyExist) {
-      return res
-        .status(400)
-        .json({ message: "User already exist, Please login!", success: false });
-    }
-    const hashedPassword = await bcryptjs.hash(password, 10);
-
     // Creating verification token (OTP)
     const verificationToken = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
 
+    const userAlreadyExist = await User.findOne({ email });
+    if (userAlreadyExist) {
+      if (userAlreadyExist.isVerified) {
+        return res.status(400).json({
+          message: "User already exist, Please login!",
+          success: false,
+        });
+      } else {
+        userAlreadyExist.verificationToken = verificationToken;
+        userAlreadyExist.verificationTokenExpiresAt =
+          Date.now() + 10 * 60 * 1000;
+        await userAlreadyExist.save();
+
+        await sendVerificationEmail(userAlreadyExist.email, verificationToken);
+        // JWT
+        generateTokenAndSetCookies(res, user._id);
+        return res.status(200).json({
+          message: "OTP sent to your email!",
+          user: {
+            ...userAlreadyExist._doc, // Spread the user document means user data
+            password: undefined, // and change the password value to undefined so it is not shown in response
+          },
+          success: true,
+        });
+      }
+    }
+
+    const hashedPassword = await bcryptjs.hash(password, 10);
     const user = await User.create({
       email,
       password: hashedPassword,
@@ -42,9 +62,6 @@ export const signup = async (req, res) => {
 
     // Sending OTP through nodemailer
     await sendVerificationEmail(user.email, verificationToken);
-
-    // JWT
-    generateTokenAndSetCookies(res, user._id);
 
     res.status(201).json({
       message: "Signed up successfully!",
@@ -85,6 +102,7 @@ export const verifyEmail = async (req, res) => {
     user.verificationTokenExpiresAt = undefined;
     await user.save();
     await sendWelcomeEmail(user.email);
+
     res.status(200).json({
       success: true,
       message: "Email verified successfully!",
@@ -109,12 +127,21 @@ export const login = async (req, res) => {
       throw new Error("All fields are required!");
     }
     const user = await User.findOne({ email });
+    // If user not exist
     if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not exist, Please Signup!",
+      });
+    }
+    // if user not verified
+    if (!user.isVerified) {
       return res.status(404).json({
         success: false,
         message: "Invalid Credentials, Please Signup!",
       });
     }
+
     const isPasswordValid = await bcryptjs.compare(password, user.password);
     if (!isPasswordValid) {
       return res
@@ -122,9 +149,10 @@ export const login = async (req, res) => {
         .json({ success: false, message: "Incorrect Password!" });
     }
 
-    generateTokenAndSetCookies(res, user._id);
     user.lastLogin = new Date();
     await user.save();
+
+    generateTokenAndSetCookies(res, user._id);
 
     res.status(200).json({
       success: true,
@@ -146,7 +174,6 @@ export const logout = (req, res) => {
 };
 
 // Forgot password route: http://localhost:3000/api/auth/forgot-password
-// We will generate a reset token using crypto and save it in DB with reset password token expiry time and send this token integrated with link to user which will lead the user to reset page and from there we will took both reset token form url and new password save in DB after searching the user with reset token
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
   try {
@@ -174,21 +201,23 @@ export const forgotPassword = async (req, res) => {
       message: "Password reset link is sent to email!",
     });
   } catch (error) {
-    res.status(400).json({ success: false, message: "Something went wrong!" });
+    res.status(500).json({ success: false, message: "Something went wrong!" });
   }
 };
 
-// Reset password route: http://localhost:3000/api/auth/reset-password
+// Reset password route: http://localhost:3000/api/auth/reset-password/
 export const resetPassword = async (req, res) => {
   const { token } = req.params;
-  const {password} = req.body
+  const { password } = req.body;
   try {
     const user = await User.findOne({
       resetPasswordToken: token,
       resetPasswordExpiresAt: { $gt: Date.now() },
     });
     if (!user) {
-      res.status(404).json({ success: true, message: "Invalid or expire reset token" });
+      return res
+        .status(404)
+        .json({ success: true, message: "Invalid or expire reset token" });
     }
     // update password
     const hashedPassword = await bcryptjs.hash(password, 10);
@@ -196,9 +225,27 @@ export const resetPassword = async (req, res) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpiresAt = undefined;
     user.save();
-    await sendResetPasswordSuccessEmail(user.email)
-    res.status(200).json({success: true, message: "Password updated successfully!"})
+    await sendResetPasswordSuccessEmail(user.email);
+    res
+      .status(200)
+      .json({ success: true, message: "Password updated successfully!" });
   } catch (error) {
-    res.status(400).json({ success: false, message: "Something went wrong!" });
+    res.status(500).json({ success: false, message: "Something went wrong!" });
+  }
+};
+
+// Check auth route : http://localhost:3000/api/auth/check-auth
+export const checkAuth = async (req, res) => {
+  try {
+    // userId is created after decoding token in middleware, select will select the provided filed and (-) before filed name will remove that filed and return other data so here no password will in returned data
+    const user = await User.findById(req.userId).select("-password");
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Something went wrong!" });
   }
 };
