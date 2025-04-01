@@ -3,6 +3,9 @@ import { create } from "zustand";
 import { errorMessage, successMessage } from "../Utils/HandleToast";
 import { totalWords } from "../Utils/TotalWords";
 
+
+axios.defaults.withCredentials = true;
+
 export const useContentStore = create((set, get)=> ({
     totalUsage: 0,
     isLoading: false,

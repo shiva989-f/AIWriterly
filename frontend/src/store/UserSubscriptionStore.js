@@ -1,6 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 
+axios.defaults.withCredentials = true;
 
 export const userSubscriptionStore = create((set, get) => ({
   isUserSubscribed: false,
