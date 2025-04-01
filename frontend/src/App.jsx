@@ -9,10 +9,15 @@ import LoadingSpinner from "./components/LoadingSpinner";
 import Dashboard from "./Pages/Dashboard";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
+import GenerateContent from "./Pages/GenerateContent";
+import Profile from "./Pages/Profile";
+import History from "./Pages/History";
+import Billing from "./Pages/Billing";
 
 // Protected routes
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore()
+
   if (!isAuthenticated) {
     return <Navigate to='/login' replace />
   }
@@ -32,6 +37,7 @@ const RedirectAuthenticatedUser = ({ children }) => {
   return children;
 }
 
+
 const App = () => {
   const { checkAuth, isCheckingAuth } = useAuthStore()
 
@@ -39,18 +45,46 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
 
-
+  // Loading animation while checkingAuth
   if (isCheckingAuth) return <LoadingSpinner />
 
   return (
     <div className="min-h-screen bg-gradient-to-br
-    from-gray-900 via-cyan-900 to-blue-900 flex items-center justify-center relative overflow-hidden">
+    from-gray-900 via-cyan-800 to-foregroundColor flex items-center justify-center relative overflow-hidden">
       <Routes>
         <Route path='/' element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
         } />
+        <Route path='/dashboard/' element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path='/dashboard/history' element={
+          <ProtectedRoute>
+            <History />
+          </ProtectedRoute>
+        } />
+        <Route path='/dashboard/billing' element={
+          <ProtectedRoute>
+            <Billing />
+          </ProtectedRoute>
+        } />
+
+        <Route path='/dashboard/content/:slug' element={
+          <ProtectedRoute>
+            <GenerateContent />
+          </ProtectedRoute>
+        } />
+        <Route path='/dashboard/profile' element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
+
+
         <Route path='/signup' element={
           <RedirectAuthenticatedUser>
             <Signup />

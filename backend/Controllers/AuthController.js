@@ -22,6 +22,8 @@ export const signup = async (req, res) => {
       100000 + Math.random() * 900000
     ).toString();
 
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
     const userAlreadyExist = await User.findOne({ email });
     if (userAlreadyExist) {
       if (userAlreadyExist.isVerified) {
@@ -30,6 +32,7 @@ export const signup = async (req, res) => {
           success: false,
         });
       } else {
+        userAlreadyExist.password = hashedPassword
         userAlreadyExist.verificationToken = verificationToken;
         userAlreadyExist.verificationTokenExpiresAt =
           Date.now() + 10 * 60 * 1000;
@@ -49,7 +52,6 @@ export const signup = async (req, res) => {
       }
     }
 
-    const hashedPassword = await bcryptjs.hash(password, 10);
     const user = await User.create({
       email,
       password: hashedPassword,
@@ -237,7 +239,7 @@ export const resetPassword = async (req, res) => {
 // Check auth route : http://localhost:3000/api/auth/check-auth
 export const checkAuth = async (req, res) => {
   try {
-    // userId is created after decoding token in middleware, select will select the provided filed and (-) before filed name will remove that filed and return other data so here no password will in returned data
+    // userId is created after decoding token in middleware, select will select the provided value and (-) before filed name will remove that filed and return other data so here no password will in returned data
     const user = await User.findById(req.userId).select("-password");
     if (!user) {
       return res

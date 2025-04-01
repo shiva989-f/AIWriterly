@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import Input from '../components/Input';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Lock, Mail, Loader } from 'lucide-react';
+import { Lock, Mail } from 'lucide-react';
 import { errorMessage } from '../Utils/HandleToast';
 import { useAuthStore } from '../store/authStore';
+import Button from '../components/Button';
 
 const Login = () => {
-    const { login, forgotPassword, isLoading, error, clearError } = useAuthStore()
+    const { login, isLoading, error, clearError } = useAuthStore()
     
     const [formData, setFormData] = useState({
         email: "",
@@ -52,7 +53,7 @@ const Login = () => {
                 <form onSubmit={handleSubmit} className='mt-6'>
                     <Input
                         icon={Mail}
-                        type="email"
+                        type="text"
                         placeholder="Email"
                         name="email"
                         required
@@ -74,9 +75,7 @@ const Login = () => {
 
                     {error && <p className='text-red-500 font-semibold mt-2'>{error}</p>}
 
-                    <button type="submit" className='w-full text-white font-[poppins] bg-gradient-to-br from-cyan-500 to-blue-600 mt-5 px-3 py-2 rounded-lg font-bold hover:from-cyan-600 hover:to-blue-700 transition duration-200 outline-none' disabled={isLoading}>
-                        {isLoading ? <Loader className='animate-spin mx-auto' /> : "Login"}
-                    </button>
+                    <Button isLoading={isLoading} buttonText={"Login"} handleBtnFunc={handleSubmit} />
                 </form>
             </div>
             <div className="px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center">

@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import Input from '../components/Input';
-import { Lock, Mail, User, Loader } from 'lucide-react'
+import { Lock, Mail, User } from 'lucide-react'
 import { motion } from "framer-motion";
 import { Link, useNavigate } from 'react-router-dom';
 import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
 import { useAuthStore } from '../store/authStore';
 import { errorMessage } from '../Utils/HandleToast';
+import Button from '../components/Button';
 
 const Signup = () => {
-  const { signup, error, user, isLoading, clearError } = useAuthStore()
+  const { signup, error, isLoading, clearError } = useAuthStore()
 
   const navigate = useNavigate()
 
@@ -81,9 +82,7 @@ const Signup = () => {
             {/* Password Strength Meter */}
             <PasswordStrengthMeter password={formData.password} />
 
-          <button type="submit" className='w-full text-white font-[poppins] bg-gradient-to-br from-cyan-500 to-blue-600 mt-5 px-3 py-2 rounded-lg font-bold hover:from-cyan-600 hover:to-blue-700 transition duration-200 outline-none' disabled={isLoading}>
-            {isLoading ? <Loader className='animate-spin mx-auto' /> : "Signup"}
-          </button>
+          <Button isLoading={isLoading} buttonText={"Signup"} handleBtnFunc={handleSubmit} />
         </form>
       </div>
       <div className="px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center">
