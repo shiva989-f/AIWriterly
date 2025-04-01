@@ -50,7 +50,7 @@ export const isUserSubscribed = async (req, res)=> {
     throw new Error("No email provided!")
   }
   try {
-    const isUserSubscribed = await paymentModel.find({email});
+    const isUserSubscribed = await paymentModel.findOne({email});
     if (!isUserSubscribed) {
       return res.status(404).json({message: "User is not subscribed", success: false})
     }

@@ -12,6 +12,9 @@ export const userSubscriptionStore = create((set, get) => ({
         `${import.meta.env.VITE_API_BASE_URL}/payment/user-subscription`,
         { email }
       );
+
+      console.log(userSubscription);
+      
       
       if (userSubscription) {
         set({ isUserSubscribed: true, maxUsage: 100000 });

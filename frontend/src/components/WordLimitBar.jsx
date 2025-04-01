@@ -28,9 +28,9 @@ const WordLimitBar = () => {
                 </div>
             </div>
 
-            <button className='mt-3 flex items-center justify-center gap-2 text-white font-[poppins] text-xs bg-gradient-to-br from-cyan-500 to-blue-600 px-3 py-2 rounded-lg font-bold hover:from-cyan-600 hover:to-blue-700 transition duration-200 outline-none' ><Crown className='size-4' onClick={() => {
+            <button className='mt-3 flex items-center justify-center gap-2 text-white font-[poppins] text-xs bg-gradient-to-br from-cyan-500 to-blue-600 px-3 py-2 rounded-lg font-bold hover:from-cyan-600 hover:to-blue-700 transition duration-200 outline-none' onClick={() => {
                 navigate("/dashboard/billing")
-            }} /> Upgrade</button>
+            }} ><Crown className='size-4' /> Upgrade</button>
 
         </div>
     )
